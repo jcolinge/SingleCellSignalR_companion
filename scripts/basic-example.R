@@ -18,7 +18,7 @@ table(pop)
 
 
 # ==============================================================================
-# analysis  without pathway below the receptors
+# analysis without pathway below the receptors is very
 # quick but simplistic and it does not return BSRInferenceComp
 # objects, i.e., follow up operations are limited
 
