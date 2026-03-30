@@ -1,6 +1,6 @@
 ###################################################################
 # Example code to process FACS-sorted populations un bulk RNA-seq #
-# and perform subsequent LRI inference with SinfleCellSignalR v2  #
+# and perform subsequent LRI inference with SingleCellSignalR v2  #
 ###################################################################
 
 library(BulkSignalR)
