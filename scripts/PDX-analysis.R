@@ -389,18 +389,21 @@ plot(venn(list(para=unique(lri.stroma.cancer$L),auto=unique(lri.a.stroma$L))))
 # global bubble plots ----------------------------
 
 cellNetBubblePlot(scsr)
+cellNetHeatmap(scsr, selected.populations=c("PDX","mmu_PDX"))
 
 genes <- intersect(LRdb$receptor, reactome$`Gene name`[reactome$`Reactome ID`=="R-HSA-190236"]) # Signaling by FGFR
 cellNetBubblePlot(scsr, genes.to.count=genes)
 pdf(paste0(res.folder,"bubble-FGFR-signal.pdf"),width=2.5,height=1.5,pointsize=7)
 cellNetBubblePlot(scsr, genes.to.count=genes, use.proportions=TRUE)
 dev.off()
+cellNetHeatmap(scsr, genes.to.count=genes, use.proportions=TRUE, selected.populations=c("PDX","mmu_PDX"))
 
 genes <- intersect(LRdb$receptor, reactome$`Gene name`[reactome$`Reactome ID`=="R-HSA-194138"]) # Signaling by VEGF
 cellNetBubblePlot(scsr, genes.to.count=genes)
 pdf(paste0(res.folder,"bubble-VEGF-signal.pdf"),width=2.5,height=1.5,pointsize=7)
 cellNetBubblePlot(scsr, genes.to.count=genes, use.proportions=TRUE)
 dev.off()
+cellNetHeatmap(scsr, genes.to.count=genes, use.proportions=TRUE, selected.populations=c("PDX","mmu_PDX"))
 
 
 

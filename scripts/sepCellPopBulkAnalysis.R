@@ -16,13 +16,6 @@ if (.Platform$OS.type=="windows")
 
 
 LRdb <- getResource("LRdb")
-LRdb.clean <- LRdb
-LRdb.clean <- LRdb.clean[!(LRdb.clean$ligand %in% c("ARRB2","JAK2","NCK1","PSG1",
-                                                    "PTPN11","PTPN6","SRC","STAT3",
-                                                    "SYK","CD14","HRAS","HSP90AA1",
-                                                    "HSP90B1")),]
-resetLRdb(LRdb.clean,switch=TRUE)
-LRdb <- getResource("LRdb")
 reactome <- getResource("Reactome")
 gobp <- getResource("GO-BP")
 

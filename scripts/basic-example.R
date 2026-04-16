@@ -53,10 +53,36 @@ inter.a.pop.5 <- getAutocrines(scsr.no, "pop_5")
 inter.p.pop.1.2 <- getParacrines(scsr.no, "pop_1", "pop_2")
 inter.p.pop.1.3 <- getParacrines(scsr.no, "pop_1", "pop_3")
 
+cellNetBubblePlot(scsr.no)
+cellNetHeatmap(scsr.no, bar.num=TRUE, bar.plot.height=unit(2, "cm"))
+
+# version without resampling (not recommended as results depend on population sizes)
+scsr.no.no <- SCSRNoNet(counts=mat,
+                        populations=pop,
+                        normalize=FALSE,
+                        method="log2-transform",
+                        log.transformed=TRUE)
+scsr.no.no
+
+# infer L-R interactions
+scsr.no.no <- performInferences(scsr.no.no,
+                                subsample.size=-1,
+                                verbose=TRUE,
+                                min.logFC=0.001,
+                                max.pval=0.05)
+scsr.no.no
+cellNetHeatmap(scsr.no.no, bar.num=TRUE, bar.plot.height=unit(2, "cm"))
+
+
 
 # ==============================================================================
-# real analysis including pathways below the receptors and getting
+# Deeper analysis including pathways below the receptors and getting
 # results as BSRInferenceComp objects. Takes more time though.
+
+# We also examplify the use of a parallel computing backend. Here,
+# we use doParallel to be compatible with Windows, which cannot fork.
+library(doParallel)
+registerDoParallel(min(c(8, detectCores()-1)))
 
 scsr.with <- SCSRNet(counts=mat,
                      populations=pop,
@@ -69,7 +95,7 @@ scsr.with
 scsr.with <- performInferences(scsr.with,
                                verbose=TRUE,
                                min.logFC=0.001,
-                               max.pval=0.01,
+                               max.pval=0.05,
                                max.pw.size=200,
                                min.t.logFC=0.005)
 scsr.with
@@ -77,7 +103,7 @@ scsr.with
 # retrieves different sets of interactions
 
 # Note 1: L-R interactions are returned as BSRInferenceComp objects,
-# i.e., LRinter must be used if we want to get the as data frames
+# i.e., LRinter must be used if we want to get them as a data.frame
 
 # Note 2: SingleCellSignalR version 1 original LR-score is also computed
 # here
@@ -100,3 +126,17 @@ sum(winter.a.pop.5$qval<1e-3 & winter.a.pop.5$rank.pval<0.05)
 winter.p.pop.1.2 <- LRinter(getParacrines(scsr.with, "pop_1", "pop_2"))
 winter.p.pop.1.2.red <- LRinter(reduceToBestPathway(getParacrines(scsr.with, "pop_1", "pop_2")))
 
+# plots with counts of LR interactions
+cellNetBubblePlot(scsr.with)
+cellNetHeatmap(scsr.no, bar.num=TRUE, bar.plot.height=unit(2, "cm"))
+cellNetHeatmap(scsr.with, bar.num=TRUE, bar.plot.height=unit(2, "cm"))
+
+# plots focusing on a given pathway
+LRdb <- getResource("LRdb")
+reactome <- getResource("Reactome")
+genes <- intersect(LRdb$receptor, reactome$`Gene name`[reactome$`Reactome ID`=="R-HSA-449147"]) # Signaling by Interleukins
+cellNetBubblePlot(scsr.with, genes.to.count=genes, use.proportions=TRUE)
+cellNetBubblePlot(scsr.with, genes.to.count=genes, use.proportions=TRUE,
+                  low.color="gray", high.color="royalblue3")
+cellNetHeatmap(scsr.with, genes.to.count=genes, use.proportions=TRUE)
+cellNetHeatmap(scsr.with, genes.to.count=genes, high.color="tomato")
