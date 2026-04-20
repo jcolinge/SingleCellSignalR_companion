@@ -68,7 +68,7 @@ scsr.no.no
 scsr.no.no <- performInferences(scsr.no.no,
                                 subsample.size=-1,
                                 verbose=TRUE,
-                                min.logFC=0.001,
+                                min.logFC=log2(1.1),
                                 max.pval=0.05)
 scsr.no.no
 cellNetHeatmap(scsr.no.no, bar.num=TRUE, bar.plot.height=unit(2, "cm"))
